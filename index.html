@@ -5,126 +5,163 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepBeforeDo 🧠</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .nav-active { @apply bg-sky-50 text-sky-700 font-semibold shadow-sm; }
+        .tab-active { @apply border-b-4 border-sky-600 text-sky-700 font-semibold; }
+        .mastery-badge { @apply inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-3xl; }
+    </style>
 </head>
-<body class="bg-blue-50 text-slate-800 font-sans min-h-screen relative">
-
-    <nav class="bg-white shadow-sm border-b border-blue-100 p-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-600 flex items-center gap-2">
-                🧠 DeepBeforeDo
-            </h1>
-            <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full font-medium">Offline Safe (IndexedDB)</span>
-        </div>
-    </nav>
-
-    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
-        
-        <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-blue-100 h-fit">
-            <h2 class="text-lg font-bold text-blue-900 mb-4 border-b border-blue-50 pb-2">1️⃣ Intent Phase</h2>
-            <form id="intent-form" class="space-y-4">
+<body class="bg-slate-50 text-slate-900" onload="initApp()">
+    <div class="flex h-screen overflow-hidden">
+        <!-- SIDEBAR -->
+        <div class="w-72 bg-white border-r border-slate-200 flex flex-col shadow-xl">
+            <div class="px-8 py-10 flex items-center gap-4 border-b border-slate-100">
+                <div class="w-11 h-11 bg-gradient-to-br from-sky-500 to-blue-600 rounded-3xl flex items-center justify-center text-4xl shadow-inner text-white">🧠</div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Discipline</label>
-                    <select id="discipline" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="Coding">💻 Coding</option>
-                        <option value="Math">🧮 Mathematics</option>
-                        <option value="English">📖 English</option>
-                        <option value="Other">📚 Other</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Topic Title</label>
-                    <input type="text" id="topic-title" required placeholder="e.g., JS Array.map" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Why learn this?</label>
-                    <textarea id="intent-why" required rows="3" placeholder="What problem does it solve?" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                    Lock Intent
-                </button>
-            </form>
-        </div>
-
-        <div class="lg:col-span-3 space-y-6">
-            <div class="grid grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100 text-center">
-                    <p class="text-sm text-slate-500">Started</p>
-                    <p id="stat-started" class="text-2xl font-bold text-blue-600">0</p>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100 text-center">
-                    <p class="text-sm text-slate-500">Mastered</p>
-                    <p id="stat-mastered" class="text-2xl font-bold text-blue-600">0</p>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100 text-center">
-                    <p class="text-sm text-slate-500">Surface-Level</p>
-                    <p id="stat-surface" class="text-2xl font-bold text-amber-500">0</p>
+                    <h1 class="text-3xl font-bold tracking-tighter">DeepBeforeDo</h1>
+                    <p class="text-[10px] text-slate-400 tracking-[2px] -mt-1">MASTER WITH PROOF</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
-                <div class="p-4 border-b border-blue-50 flex justify-between items-center bg-blue-50/50">
-                    <h2 class="text-lg font-bold text-blue-900">Your Learning Dashboard</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-blue-100">
-                        <thead class="bg-white">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-blue-500 uppercase tracking-wider">Discipline</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-blue-500 uppercase tracking-wider">Topic</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-blue-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-blue-500 uppercase tracking-wider">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dashboard-rows" class="bg-white divide-y divide-blue-50">
-                            </tbody>
-                    </table>
+            <nav class="flex-1 px-3 py-8 space-y-1 text-sm">
+                <a id="nav-dashboard" onclick="switchView('dashboard')" class="nav-item nav-active flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                    <i class="fa-solid fa-house w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a id="nav-topics" onclick="switchView('topics')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                    <i class="fa-solid fa-list-check w-5"></i>
+                    <span>All Topics</span>
+                </a>
+                <a id="nav-new" onclick="switchView('new')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                    <i class="fa-solid fa-circle-plus w-5"></i>
+                    <span>New Topic</span>
+                </a>
+                <a id="nav-focus" onclick="switchView('focus')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                    <i class="fa-solid fa-brain w-5"></i>
+                    <span>Focus Mode</span>
+                </a>
+                <a id="nav-analytics" onclick="switchView('analytics')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <div class="p-6 border-t border-slate-100">
+                <div class="bg-sky-50 rounded-3xl p-5 text-xs leading-relaxed">
+                    <div class="flex items-center gap-2 text-sky-600 mb-2">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span class="font-semibold">Philosophy</span>
+                    </div>
+                    <p class="text-slate-600">Track depth, not checkboxes.</p>
                 </div>
             </div>
         </div>
-    </main>
 
-    <div id="study-modal" class="hidden fixed inset-0 bg-blue-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-blue-100">
-            <div class="p-6 border-b border-blue-50 flex justify-between items-center sticky top-0 bg-white z-10">
-                <h2 id="modal-title" class="text-xl font-bold text-blue-900">Study Mode</h2>
-                <button id="close-modal" class="text-slate-400 hover:text-blue-600 font-bold text-xl">&times;</button>
-            </div>
-            
-            <form id="study-form" class="p-6 space-y-6">
-                <input type="hidden" id="edit-id">
-                
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h3 class="font-bold text-blue-800 mb-2">2️⃣ Active Processing</h3>
-                    <label class="block text-sm text-slate-600 mb-1">Explain it in your own words. No copy-pasting.</label>
-                    <textarea id="study-processing" rows="3" class="w-full border border-blue-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                </div>
-
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h3 class="font-bold text-blue-800 mb-2">3️⃣ Proof Phase</h3>
-                    <label class="block text-sm text-slate-600 mb-1">Apply it / Give an example:</label>
-                    <textarea id="study-proof" rows="2" class="w-full border border-blue-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"></textarea>
-                    
-                    <label class="block text-sm text-slate-600 mb-1">Confidence Rating (1-5)</label>
-                    <input type="range" id="study-confidence" min="1" max="5" value="1" class="w-full accent-blue-500">
-                    <div class="flex justify-between text-xs text-slate-500 px-1 mt-1">
-                        <span>1 (Lost)</span><span>2</span><span>3</span><span>4</span><span>5 (Expert)</span>
+        <!-- MAIN -->
+        <div class="flex-1 flex flex-col">
+            <!-- HEADER -->
+            <header class="bg-white border-b h-16 flex items-center px-8 justify-between">
+                <div class="flex items-center gap-4 flex-1">
+                    <div class="relative flex-1 max-w-md">
+                        <input id="search-input" onkeyup="if(event.key==='Enter') filterTopics()" type="text" 
+                               placeholder="Search any topic..." 
+                               class="w-full bg-slate-100 border-0 focus:ring-2 focus:ring-sky-300 rounded-3xl py-3 px-6 text-sm outline-none">
                     </div>
                 </div>
+                <div class="flex items-center gap-6">
+                    <div onclick="showNewTopicModal()" 
+                         class="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium px-6 h-10 rounded-3xl cursor-pointer transition-all shadow-sm">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Topic</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-lg">🇷🇼</div>
+                        <div>
+                            <p class="text-sm font-medium leading-none">Tuyizere</p>
+                            <p class="text-[10px] text-slate-400">Kigali</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h3 class="font-bold text-blue-800 mb-2">4️⃣ Mastery Level</h3>
-                    <select id="study-mastery" class="w-full border border-blue-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 font-medium">
-                        <option value="⚠️ Surface Level">⚠️ Surface Level</option>
-                        <option value="🟡 Practicing">🟡 Practicing</option>
-                        <option value="🟢 Comfortable">🟢 Comfortable</option>
-                        <option value="🟣 Mastered">🟣 Mastered</option>
+            <!-- CONTENT -->
+            <div id="content" class="flex-1 overflow-auto p-8 bg-slate-50"></div>
+        </div>
+    </div>
+
+    <!-- TOPIC DETAIL MODAL -->
+    <div id="topic-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-8">
+        <div class="bg-white rounded-3xl w-full max-w-5xl h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="px-8 py-6 border-b flex items-center justify-between bg-white">
+                <div class="flex items-center gap-4">
+                    <div id="modal-emoji" class="text-4xl"></div>
+                    <div>
+                        <h2 id="modal-title" class="font-semibold text-2xl tracking-tight"></h2>
+                        <p id="modal-discipline" class="text-sky-600 text-sm font-medium"></p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center text-3xl text-slate-300 hover:text-slate-500 transition-colors">×</button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex border-b bg-white px-8 text-sm">
+                <button onclick="switchTab(0)" class="tab-btn tab-active px-8 py-5">1. Intent</button>
+                <button onclick="switchTab(1)" class="tab-btn px-8 py-5">2. Active Processing</button>
+                <button onclick="switchTab(2)" class="tab-btn px-8 py-5">3. Proof</button>
+                <button onclick="switchTab(3)" class="tab-btn px-8 py-5">4. Mastery</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tab-content" class="flex-1 p-8 overflow-auto bg-slate-50"></div>
+
+            <!-- Footer -->
+            <div class="border-t bg-white px-8 py-5 flex justify-between items-center">
+                <button onclick="deleteCurrentTopic()" 
+                        class="text-red-500 hover:text-red-600 flex items-center gap-2 text-sm font-medium">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>Delete Topic</span>
+                </button>
+                <div class="flex gap-3">
+                    <button onclick="closeModal()" 
+                            class="px-7 py-3 text-slate-600 hover:bg-slate-100 rounded-3xl font-medium">Close</button>
+                    <button onclick="saveTopic()" 
+                            class="px-8 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-3xl font-semibold shadow-sm">Save &amp; Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW TOPIC MODAL -->
+    <div id="new-topic-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl w-full max-w-lg">
+            <div class="px-8 py-7 border-b">
+                <h3 class="text-2xl font-semibold">Start a New Deep Learning Journey</h3>
+            </div>
+            <div class="p-8 space-y-6">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Discipline</label>
+                    <select id="new-discipline" class="w-full rounded-3xl border border-slate-200 focus:border-sky-400 px-6 py-4 text-lg">
+                        <option value="Coding">💻 Coding</option>
+                        <option value="Mathematics">🧮 Mathematics</option>
+                        <option value="English">📖 English</option>
+                        <option value="Other">📚 Other Course</option>
                     </select>
                 </div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-sm">
-                    Save Progress & Update Dashboard
-                </button>
-            </form>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Topic Title</label>
+                    <input id="new-title" type="text" placeholder="e.g. Binary Search Algorithm" 
+                           class="w-full rounded-3xl border border-slate-200 focus:border-sky-400 px-6 py-4 text-lg">
+                </div>
+            </div>
+            <div class="px-8 py-6 border-t flex justify-end gap-4">
+                <button onclick="closeNewModal()" class="px-8 py-3.5 text-slate-600 font-medium">Cancel</button>
+                <button onclick="createNewTopic()" 
+                        class="px-8 py-3.5 bg-sky-600 text-white rounded-3xl font-semibold">Create &amp; Open Intent Phase</button>
+            </div>
         </div>
     </div>
 
