@@ -33,7 +33,7 @@
                 <a id="nav-topics" onclick="switchView('topics')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
                     <i class="fa-solid fa-list-check w-5"></i><span>All Topics</span>
                 </a>
-                <a onclick="showNewTopicModal()" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                <a id="nav-new" onclick="switchView('new')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
                     <i class="fa-solid fa-circle-plus w-5"></i><span>New Topic</span>
                 </a>
                 <a id="nav-focus" onclick="switchView('focus')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <!-- MAIN -->
+        <!-- MAIN CONTENT -->
         <div class="flex-1 flex flex-col">
             <!-- HEADER -->
             <header class="bg-white border-b h-16 flex items-center px-8 justify-between">
@@ -67,23 +67,22 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-6">
-                    <div onclick="showNewTopicModal()" 
+                    <div onclick="switchView('new')" 
                          class="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium px-6 h-10 rounded-3xl cursor-pointer transition-all shadow-sm">
                         <i class="fa-solid fa-plus"></i>
-                       <a id="nav-new" onclick="switchView('new')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
-    <i class="fa-solid fa-circle-plus w-5"></i><span>New Topic</span>
-</a>
+                        <span>New Topic</span>
+                    </div>
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-lg">🇷🇼</div>
                         <div>
                             <p class="text-sm font-medium leading-none">Tuyizere</p>
-                            <p class="text-[10px] text-slate-400"</p>
+                            <p class="text-[10px] text-slate-400">Kigali</p>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <!-- CONTENT -->
+            <!-- DYNAMIC CONTENT -->
             <div id="content" class="flex-1 overflow-auto p-8 bg-slate-50"></div>
         </div>
     </div>
@@ -102,7 +101,7 @@
                 <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center text-3xl text-slate-300 hover:text-slate-500 transition-colors">×</button>
             </div>
 
-            <!-- Tabs -->
+            <!-- TABS -->
             <div class="flex border-b bg-white px-8 text-sm">
                 <button onclick="switchTab(0)" class="tab-btn tab-active px-8 py-5">1. Intent</button>
                 <button onclick="switchTab(1)" class="tab-btn px-8 py-5">2. Active Processing</button>
@@ -110,21 +109,17 @@
                 <button onclick="switchTab(3)" class="tab-btn px-8 py-5">4. Mastery</button>
             </div>
 
-            <!-- Tab Content -->
+            <!-- TAB CONTENT -->
             <div id="tab-content" class="flex-1 p-8 overflow-auto bg-slate-50"></div>
 
-            <!-- Footer -->
+            <!-- FOOTER -->
             <div class="border-t bg-white px-8 py-5 flex justify-between items-center">
-                <button onclick="deleteCurrentTopic()" 
-                        class="text-red-500 hover:text-red-600 flex items-center gap-2 text-sm font-medium">
-                    <i class="fa-solid fa-trash"></i>
-                    <span>Delete Topic</span>
+                <button onclick="deleteCurrentTopic()" class="text-red-500 hover:text-red-600 flex items-center gap-2 text-sm font-medium">
+                    <i class="fa-solid fa-trash"></i> Delete Topic
                 </button>
                 <div class="flex gap-3">
-                    <button onclick="closeModal()" 
-                            class="px-7 py-3 text-slate-600 hover:bg-slate-100 rounded-3xl font-medium">Close</button>
-                    <button onclick="saveTopic()" 
-                            class="px-8 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-3xl font-semibold shadow-sm">Save &amp; Continue</button>
+                    <button onclick="closeModal()" class="px-7 py-3 text-slate-600 hover:bg-slate-100 rounded-3xl font-medium">Close</button>
+                    <button onclick="saveTopic()" class="px-8 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-3xl font-semibold shadow-sm">Save & Continue</button>
                 </div>
             </div>
         </div>
@@ -154,8 +149,7 @@
             </div>
             <div class="px-8 py-6 border-t flex justify-end gap-4">
                 <button onclick="closeNewModal()" class="px-8 py-3.5 text-slate-600 font-medium">Cancel</button>
-                <button onclick="createNewTopic()" 
-                        class="px-8 py-3.5 bg-sky-600 text-white rounded-3xl font-semibold">Create &amp; Open Intent Phase</button>
+                <button onclick="createNewTopic()" class="px-8 py-3.5 bg-sky-600 text-white rounded-3xl font-semibold">Create & Open</button>
             </div>
         </div>
     </div>
