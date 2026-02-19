@@ -28,24 +28,19 @@
 
             <nav class="flex-1 px-3 py-8 space-y-1 text-sm">
                 <a id="nav-dashboard" onclick="switchView('dashboard')" class="nav-item nav-active flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
-                    <i class="fa-solid fa-house w-5"></i>
-                    <span>Dashboard</span>
+                    <i class="fa-solid fa-house w-5"></i><span>Dashboard</span>
                 </a>
                 <a id="nav-topics" onclick="switchView('topics')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
-                    <i class="fa-solid fa-list-check w-5"></i>
-                    <span>All Topics</span>
+                    <i class="fa-solid fa-list-check w-5"></i><span>All Topics</span>
                 </a>
-                <a id="nav-new" onclick="switchView('new')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
-                    <i class="fa-solid fa-circle-plus w-5"></i>
-                    <span>New Topic</span>
+                <a onclick="showNewTopicModal()" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
+                    <i class="fa-solid fa-circle-plus w-5"></i><span>New Topic</span>
                 </a>
                 <a id="nav-focus" onclick="switchView('focus')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
-                    <i class="fa-solid fa-brain w-5"></i>
-                    <span>Focus Mode</span>
+                    <i class="fa-solid fa-brain w-5"></i><span>Focus Mode</span>
                 </a>
                 <a id="nav-analytics" onclick="switchView('analytics')" class="nav-item flex items-center gap-3.5 px-6 py-4 rounded-3xl cursor-pointer transition-all hover:bg-sky-50">
-                    <i class="fa-solid fa-chart-pie w-5"></i>
-                    <span>Analytics</span>
+                    <i class="fa-solid fa-chart-pie w-5"></i><span>Analytics</span>
                 </a>
             </nav>
 
@@ -95,7 +90,6 @@
     <!-- TOPIC DETAIL MODAL -->
     <div id="topic-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-8">
         <div class="bg-white rounded-3xl w-full max-w-5xl h-[92vh] flex flex-col shadow-2xl overflow-hidden">
-            <!-- Modal Header -->
             <div class="px-8 py-6 border-b flex items-center justify-between bg-white">
                 <div class="flex items-center gap-4">
                     <div id="modal-emoji" class="text-4xl"></div>
