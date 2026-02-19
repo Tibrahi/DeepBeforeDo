@@ -6,21 +6,21 @@
     <title>DeepBeforeDo 🧠</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-50 text-slate-800 font-sans min-h-screen">
+<body class="bg-blue-50 text-slate-800 font-sans min-h-screen relative">
 
     <nav class="bg-white shadow-sm border-b border-blue-100 p-4">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold text-blue-600 flex items-center gap-2">
                 🧠 DeepBeforeDo
             </h1>
-            <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full font-medium">Focus Mode: Off</span>
+            <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full font-medium">Offline Safe (IndexedDB)</span>
         </div>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
         
-        <div class="md:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-blue-50 h-fit">
-            <h2 class="text-lg font-bold text-blue-900 mb-4 border-b border-blue-100 pb-2">1️⃣ Intent Phase</h2>
+        <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-blue-100 h-fit">
+            <h2 class="text-lg font-bold text-blue-900 mb-4 border-b border-blue-50 pb-2">1️⃣ Intent Phase</h2>
             <form id="intent-form" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-1">Discipline</label>
@@ -33,41 +33,100 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-1">Topic Title</label>
-                    <input type="text" id="topic-title" required placeholder="e.g., JavaScript Array.map" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <input type="text" id="topic-title" required placeholder="e.g., JS Array.map" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Why am I learning this?</label>
-                    <textarea id="intent-why" required rows="3" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Why learn this?</label>
+                    <textarea id="intent-why" required rows="3" placeholder="What problem does it solve?" class="w-full border border-blue-200 rounded-lg p-2 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                    Lock Intent & Start Learning
+                    Lock Intent
                 </button>
             </form>
         </div>
 
-        <div class="md:col-span-2 space-y-6">
+        <div class="lg:col-span-3 space-y-6">
             <div class="grid grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-50 text-center">
-                    <p class="text-sm text-slate-500">Topics Started</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100 text-center">
+                    <p class="text-sm text-slate-500">Started</p>
                     <p id="stat-started" class="text-2xl font-bold text-blue-600">0</p>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-50 text-center">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100 text-center">
                     <p class="text-sm text-slate-500">Mastered</p>
                     <p id="stat-mastered" class="text-2xl font-bold text-blue-600">0</p>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-50 text-center">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-100 text-center">
                     <p class="text-sm text-slate-500">Surface-Level</p>
                     <p id="stat-surface" class="text-2xl font-bold text-amber-500">0</p>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-blue-50">
-                <h2 class="text-lg font-bold text-blue-900 mb-4 border-b border-blue-100 pb-2">Active Topics</h2>
-                <div id="topics-container" class="space-y-3">
-                    </div>
+            <div class="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
+                <div class="p-4 border-b border-blue-50 flex justify-between items-center bg-blue-50/50">
+                    <h2 class="text-lg font-bold text-blue-900">Your Learning Dashboard</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-blue-100">
+                        <thead class="bg-white">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-blue-500 uppercase tracking-wider">Discipline</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-blue-500 uppercase tracking-wider">Topic</th>
+                                <th class="px-6 py-3 text-left text-xs font-bold text-blue-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-right text-xs font-bold text-blue-500 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-rows" class="bg-white divide-y divide-blue-50">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
+
+    <div id="study-modal" class="hidden fixed inset-0 bg-blue-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-blue-100">
+            <div class="p-6 border-b border-blue-50 flex justify-between items-center sticky top-0 bg-white z-10">
+                <h2 id="modal-title" class="text-xl font-bold text-blue-900">Study Mode</h2>
+                <button id="close-modal" class="text-slate-400 hover:text-blue-600 font-bold text-xl">&times;</button>
+            </div>
+            
+            <form id="study-form" class="p-6 space-y-6">
+                <input type="hidden" id="edit-id">
+                
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h3 class="font-bold text-blue-800 mb-2">2️⃣ Active Processing</h3>
+                    <label class="block text-sm text-slate-600 mb-1">Explain it in your own words. No copy-pasting.</label>
+                    <textarea id="study-processing" rows="3" class="w-full border border-blue-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h3 class="font-bold text-blue-800 mb-2">3️⃣ Proof Phase</h3>
+                    <label class="block text-sm text-slate-600 mb-1">Apply it / Give an example:</label>
+                    <textarea id="study-proof" rows="2" class="w-full border border-blue-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mb-3"></textarea>
+                    
+                    <label class="block text-sm text-slate-600 mb-1">Confidence Rating (1-5)</label>
+                    <input type="range" id="study-confidence" min="1" max="5" value="1" class="w-full accent-blue-500">
+                    <div class="flex justify-between text-xs text-slate-500 px-1 mt-1">
+                        <span>1 (Lost)</span><span>2</span><span>3</span><span>4</span><span>5 (Expert)</span>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <h3 class="font-bold text-blue-800 mb-2">4️⃣ Mastery Level</h3>
+                    <select id="study-mastery" class="w-full border border-blue-200 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 font-medium">
+                        <option value="⚠️ Surface Level">⚠️ Surface Level</option>
+                        <option value="🟡 Practicing">🟡 Practicing</option>
+                        <option value="🟢 Comfortable">🟢 Comfortable</option>
+                        <option value="🟣 Mastered">🟣 Mastered</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-sm">
+                    Save Progress & Update Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
 
     <script src="index.js"></script>
 </body>
