@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepBeforeDo · Think First</title>
+    <!-- Tailwind CSS via CDN + white/blue light customisation -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f0f9ff; } /* light blue background */
+        .card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 119, 255, 0.1); }
+        .btn-blue { background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: 0.2s; }
+        .btn-blue:hover { background-color: #2563eb; }
+        .input-field { border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 0.5rem; width: 100%; }
+    </style>
+</head>
+<body class="p-6 font-sans antialiased">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header with logo -->
+        <div class="flex items-center gap-4 mb-8">
+            <img src="assets/logo.png" alt="DeepBeforeDo" class="w-12 h-12 object-contain" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjM2I4MmY2Ij48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMSAxNWgtMnYtMmgydjJ6bTAtNGgtMlY3aDJ2NnoiLz48L3N2Zz4='">
+            <h1 class="text-4xl font-light text-blue-900">DeepBeforeDo</h1>
+            <span class="text-sm text-blue-600 italic self-end">Think First. Learn With Intent. Master With Proof.</span>
+        </div>
+
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 text-center">
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statStarted">0</span><span class="text-blue-600">Started</span></div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statCompleted">0</span><span class="text-blue-600">Completed</span></div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statSurface">0</span><span class="text-blue-600">Surface</span></div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statMastered">0</span><span class="text-blue-600">Mastered</span></div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statWeak">0</span><span class="text-blue-600">Weak Areas</span></div>
+        </div>
+
+        <!-- Add new topic bar -->
+        <div class="card p-6 mb-8 flex flex-wrap gap-3 items-end">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-blue-800 text-sm mb-1">New Topic</label>
+                <input type="text" id="newTopicTitle" placeholder="e.g. JavaScript Array.map" class="input-field">
+            </div>
+            <div class="w-40">
+                <label class="block text-blue-800 text-sm mb-1">Discipline</label>
+                <select id="newTopicDiscipline" class="input-field">
+                    <option>Coding</option>
+                    <option>Math</option>
+                    <option>English</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <button id="addTopicBtn" class="btn-blue h-fit">➕ Add Topic</button>
+        </div>
+
+        <!-- Topics list -->
+        <h2 class="text-2xl text-blue-800 mb-4">📚 Your Learning Topics</h2>
+        <div id="topicsContainer" class="space-y-4"></div>
+    </div>
+
+    <!-- Include the application logic -->
+    <script src="index.js"></script>
+</body>
+</html>
