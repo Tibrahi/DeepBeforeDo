@@ -6,6 +6,8 @@
     <title>DeepBeforeDo · Think First</title>
     <!-- Tailwind CSS via CDN + white/blue light customisation -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- TensorFlow.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
     <style>
         body { background-color: #f0f9ff; } /* light blue background */
         .card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 119, 255, 0.1); }
@@ -53,6 +55,24 @@
         <!-- Topics list -->
         <h2 class="text-2xl text-blue-800 mb-4">📚 Your Learning Topics</h2>
         <div id="topicsContainer" class="space-y-4"></div>
+
+        <!-- ===== NEW: TensorFlow Notes Analyzer ===== -->
+        <div class="card p-6 mt-8">
+            <h2 class="text-2xl text-blue-800 mb-4 flex items-center gap-2">
+                🧠 TensorFlow Notes Analyzer 
+                <span class="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full">experimental</span>
+            </h2>
+            <p class="text-blue-600 mb-3">
+                Paste your raw learning notes below. The AI will predict your mastery <strong>will</strong> 
+                and suggest a <strong>wish</strong> for next steps.
+            </p>
+            <textarea id="notesInput" rows="6" class="input-field mb-3" placeholder="Paste your notes here..."></textarea>
+            <button id="analyzeNotesBtn" class="btn-blue mb-4">Analyze with TensorFlow.js</button>
+            <div id="analysisResult" class="p-4 bg-blue-50 rounded hidden">
+                <p><span class="font-bold">Will:</span> <span id="willResult" class="text-blue-800">...</span></p>
+                <p><span class="font-bold">Wish:</span> <span id="wishResult" class="text-blue-800">...</span></p>
+            </div>
+        </div>
     </div>
 
     <!-- Include the application logic -->
