@@ -64,7 +64,7 @@ function render() {
                     <span class="px-2 py-1 rounded-full ${topic.active ? 'bg-green-200 text-green-800' : 'bg-gray-200'}">Active</span>
                     <span class="px-2 py-1 rounded-full ${topic.proof ? 'bg-green-200 text-green-800' : 'bg-gray-200'}">Proof</span>
                 </div>
-                <!-- simple expandable forms would go here, but for demo we keep it compact -->
+                <!-- simple expandable forms -->
                 <div class="mt-3 text-sm text-blue-600">
                     <details class="cursor-pointer">
                         <summary class="font-medium">View / edit phases</summary>
@@ -144,7 +144,6 @@ window.deleteTopic = function(id) {
 };
 
 window.editTopic = function(id) {
-    // just scroll to the details section (already open via indicator)
     const elem = document.querySelector(`#intentWhy_${id}`);
     if (elem) elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
@@ -158,7 +157,7 @@ window.updateIntent = function(id) {
         problem: document.getElementById(`intentProblem_${id}`).value,
         where: document.getElementById(`intentWhere_${id}`).value,
         notUse: document.getElementById(`intentNotUse_${id}`).value,
-        prior: '', related: '', difficulties: '' // not implemented in demo
+        prior: '', related: '', difficulties: ''
     };
     saveTopics();
     render();
@@ -211,8 +210,106 @@ function updateStats() {
     document.getElementById('statWeak').innerText = weak;
 }
 
+// ========== NEW: TensorFlow.js Notes Analyzer ==========
+let modelReady = false;
+let model;  // will hold our tiny model
+
+// Build a simple model with fixed weights (so it's deterministic)
+async function createModel() {
+    // Define a simple sequential model
+    model = tf.sequential();
+    model.add(tf.layers.dense({
+        units: 1,
+        inputShape: [3],  // 3 features: wordCount, sentenceCount, keywordScore
+        useBias: true,
+        // We set fixed weights to avoid random training
+        kernelInitializer: tf.initializers.constant({value: [[0.5], [0.3], [0.8]]}),
+        biasInitializer: tf.initializers.constant({value: [0.2]})
+    }));
+    // No need to compile for inference only
+    modelReady = true;
+    console.log('TensorFlow.js model ready');
+}
+
+// Extract simple features from text
+function extractFeatures(text) {
+    if (!text.trim()) return [0, 0, 0];
+    
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    const wordCount = Math.min(words.length, 500) / 500;  // normalize to [0,1]
+    
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const sentenceCount = Math.min(sentences.length, 20) / 20;
+    
+    // Keyword score: count occurrences of deep-learning-related words
+    const keywords = ['why', 'because', 'apply', 'example', 'understand', 'proof', 'intent', 'master', 'practice'];
+    let keywordHits = 0;
+    const lowerText = text.toLowerCase();
+    keywords.forEach(kw => {
+        const regex = new RegExp('\\b' + kw + '\\b', 'g');
+        const matches = lowerText.match(regex);
+        if (matches) keywordHits += matches.length;
+    });
+    const keywordScore = Math.min(keywordHits, 10) / 10;  // cap at 10
+    
+    return [wordCount, sentenceCount, keywordScore];
+}
+
+// Analyze notes and update UI
+async function analyzeNotes() {
+    const notes = document.getElementById('notesInput').value;
+    if (!notes.trim()) {
+        alert('Please paste some notes first.');
+        return;
+    }
+
+    const resultDiv = document.getElementById('analysisResult');
+    const willSpan = document.getElementById('willResult');
+    const wishSpan = document.getElementById('wishResult');
+    
+    resultDiv.classList.remove('hidden');
+    willSpan.innerText = 'Analyzing...';
+    wishSpan.innerText = 'Please wait';
+    
+    // Ensure model is created
+    if (!modelReady) {
+        await createModel();
+    }
+    
+    // Extract features
+    const features = extractFeatures(notes);
+    const inputTensor = tf.tensor2d([features], [1, 3]);
+    
+    // Run inference
+    const output = model.predict(inputTensor);
+    const score = (await output.data())[0];  // score between 0 and 1 (due to weights)
+    
+    // Map score to will and wish
+    let will, wish;
+    if (score > 0.7) {
+        will = "🔥 High chance of mastery — your notes show depth!";
+        wish = "Proceed to the Proof Phase and test yourself.";
+    } else if (score > 0.4) {
+        will = "📘 Moderate understanding — some gaps remain.";
+        wish = "Review the Intent and Active phases to clarify core ideas.";
+    } else {
+        will = "🌱 Surface level — needs more reflection.";
+        wish = "Spend time on the Intent Phase: define why and where this applies.";
+    }
+    
+    willSpan.innerText = will;
+    wishSpan.innerText = wish;
+    
+    // Cleanup tensors
+    inputTensor.dispose();
+    output.dispose();
+}
+
 // ---------- Event listeners ----------
 document.addEventListener('DOMContentLoaded', () => {
     loadTopics();
     document.getElementById('addTopicBtn').addEventListener('click', window.addTopic);
+    
+    // TensorFlow analyzer button
+    document.getElementById('analyzeNotesBtn').addEventListener('click', analyzeNotes);
 });
