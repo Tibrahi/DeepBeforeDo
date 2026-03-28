@@ -4,74 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeepBeforeDo · Think First</title>
+    <!-- Tailwind CSS via CDN + white/blue light customisation -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- TensorFlow.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    
     <style>
-        body { background-color: #f0f9ff; margin: 0; }
+        body { background-color: #f0f9ff; } /* light blue background */
         .card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 119, 255, 0.1); }
-        .btn-blue { background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: 0.2s; cursor: pointer; }
+        .btn-blue { background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: 0.2s; }
         .btn-blue:hover { background-color: #2563eb; }
         .input-field { border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 0.5rem; width: 100%; }
-        
-        /* Ensures VR takes up the whole screen when active */
-        #vr-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; display: none; }
-        #exit-vr-btn { position: fixed; top: 20px; left: 20px; z-index: 60; background: rgba(255,255,255,0.8); color: black; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; border: none;}
     </style>
 </head>
-<body class="font-sans antialiased">
-    
-    <div id="ui-container" class="p-6 max-w-6xl mx-auto">
-        <div class="flex items-center justify-between mb-8">
-            <div class="flex items-center gap-4">
-                <h1 class="text-4xl font-light text-blue-900">DeepBeforeDo</h1>
-                <span class="text-sm text-blue-600 italic hidden sm:block">Think First. Learn With Intent.</span>
-            </div>
-            <button onclick="enterVR()" class="btn-blue bg-indigo-600 hover:bg-indigo-700 text-lg flex items-center gap-2">
-                🥽 Enter VR Mind Palace
-            </button>
+<body class="p-6 font-sans antialiased">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header with logo -->
+        <div class="flex items-center gap-4 mb-8">
+            <img src="assets/logo.png" alt="DeepBeforeDo" class="w-12 h-12 object-contain" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjM2I4MmY2Ij48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMSAxNWgtMnYtMmgydjJ6bTAtNGgtMlY3aDJ2NnoiLz48L3N2Zz4='">
+            <h1 class="text-4xl font-light text-blue-900">DeepBeforeDo</h1>
+            <span class="text-sm text-blue-600 italic self-end">Think First. Learn With Intent. Master With Proof.</span>
         </div>
 
+        <!-- Dashboard Stats -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 text-center">
             <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statStarted">0</span><span class="text-blue-600">Started</span></div>
             <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statCompleted">0</span><span class="text-blue-600">Completed</span></div>
-            </div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statSurface">0</span><span class="text-blue-600">Surface</span></div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statMastered">0</span><span class="text-blue-600">Mastered</span></div>
+            <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statWeak">0</span><span class="text-blue-600">Weak Areas</span></div>
+        </div>
 
+        <!-- Add new topic bar -->
         <div class="card p-6 mb-8 flex flex-wrap gap-3 items-end">
-             <div class="flex-1 min-w-[200px]">
+            <div class="flex-1 min-w-[200px]">
                 <label class="block text-blue-800 text-sm mb-1">New Topic</label>
                 <input type="text" id="newTopicTitle" placeholder="e.g. JavaScript Array.map" class="input-field">
             </div>
             <div class="w-40">
                 <label class="block text-blue-800 text-sm mb-1">Discipline</label>
                 <select id="newTopicDiscipline" class="input-field">
-                    <option>Coding</option><option>Math</option><option>English</option><option>Other</option>
+                    <option>Coding</option>
+                    <option>Math</option>
+                    <option>English</option>
+                    <option>Other</option>
                 </select>
             </div>
             <button id="addTopicBtn" class="btn-blue h-fit">➕ Add Topic</button>
         </div>
 
-        <div id="topicsContainer" class="space-y-4 mb-8"></div>
-        
+        <!-- Topics list -->
+        <h2 class="text-2xl text-blue-800 mb-4">📚 Your Learning Topics</h2>
+        <div id="topicsContainer" class="space-y-4"></div>
+
+        <!-- ===== NEW: TensorFlow Notes Analyzer ===== -->
+        <div class="card p-6 mt-8">
+            <h2 class="text-2xl text-blue-800 mb-4 flex items-center gap-2">
+                🧠 TensorFlow Notes Analyzer 
+                <span class="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full">experimental</span>
+            </h2>
+            <p class="text-blue-600 mb-3">
+                Paste your raw learning notes below. The AI will predict your mastery <strong>will</strong> 
+                and suggest a <strong>wish</strong> for next steps.
+            </p>
+            <textarea id="notesInput" rows="6" class="input-field mb-3" placeholder="Paste your notes here..."></textarea>
+            <button id="analyzeNotesBtn" class="btn-blue mb-4">Analyze with TensorFlow.js</button>
+            <div id="analysisResult" class="p-4 bg-blue-50 rounded hidden">
+                <p><span class="font-bold">Will:</span> <span id="willResult" class="text-blue-800">...</span></p>
+                <p><span class="font-bold">Wish:</span> <span id="wishResult" class="text-blue-800">...</span></p>
+            </div>
         </div>
-
-    <div id="vr-view">
-        <button id="exit-vr-btn" onclick="exitVR()">🔙 Exit VR</button>
-        <a-scene embedded>
-            <a-sky color="#e0f2fe"></a-sky>
-            
-            <a-light type="ambient" color="#fff" intensity="0.8"></a-light>
-            <a-light type="directional" position="-1 1 1" intensity="0.5"></a-light>
-
-            <a-camera position="0 1.6 0">
-                <a-cursor color="#3b82f6"></a-cursor>
-            </a-camera>
-
-            <a-entity id="vr-topics-container"></a-entity>
-        </a-scene>
     </div>
 
+    <!-- Include the application logic -->
     <script src="index.js"></script>
 </body>
 </html>
