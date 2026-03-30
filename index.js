@@ -305,11 +305,3 @@ async function analyzeNotes() {
     output.dispose();
 }
 
-// ---------- Event listeners ----------
-document.addEventListener('DOMContentLoaded', () => {
-    loadTopics();
-    document.getElementById('addTopicBtn').addEventListener('click', window.addTopic);
-    
-    // TensorFlow analyzer button
-    document.getElementById('analyzeNotesBtn').addEventListener('click', analyzeNotes);
-});
