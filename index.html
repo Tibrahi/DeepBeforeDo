@@ -34,7 +34,17 @@
             <div class="card p-4"><span class="block text-2xl font-bold text-blue-700" id="statWeak">0</span><span class="text-blue-600">Weak Areas</span></div>
         </div>
 
-       
+        <!-- Add new topic bar -->
+        <div class="card p-6 mb-8 flex flex-wrap gap-3 items-end">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-blue-800 text-sm mb-1">New Topic</label>
+                <input type="text" id="newTopicTitle" placeholder="e.g. JavaScript Array.map" class="input-field">
+   
+
+        <!-- Topics list -->
+        <h2 class="text-2xl text-blue-800 mb-4">📚 Your Learning Topics</h2>
+        <div id="topicsContainer" class="space-y-4"></div>
+
         <!-- ===== NEW: TensorFlow Notes Analyzer ===== -->
         <div class="card p-6 mt-8">
             <h2 class="text-2xl text-blue-800 mb-4 flex items-center gap-2">
